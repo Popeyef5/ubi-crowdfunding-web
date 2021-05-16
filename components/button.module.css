@@ -1,0 +1,33 @@
+.base {
+    border-radius: 8px;
+    padding: 0.5em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.action {
+  min-width: 15vw;
+  padding: 0.5em;  
+  font-size: 1.5vw;
+  font-weight: 500;
+}
+
+.primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.outline {
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.accept {
+  background-color: green;
+  color: white;
+}
+
+.warn {
+  background-color: orange;
+  color: white;
+}

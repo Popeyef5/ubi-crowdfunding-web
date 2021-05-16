@@ -1,0 +1,25 @@
+.text {
+  display: flex;
+  max-width: 100%;
+  text-align: center;
+  font-size: 9.5vw;
+  font-weight: 800;
+}
+
+.fixed {
+    margin-right: 0.25em;
+}
+
+.morphing {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg, #007cf0, #00dfd8);
+}
+
+@media screen and (max-width: 768px) {
+  .text {
+    flex-direction: column;
+    font-size: 14vw;
+  }
+}

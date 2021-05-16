@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Applicant {
+  poh_account             String          @id
+  poh_status              String          @default("Submitted")
+  created_at              DateTime        @default(now())
+  certifications_emitted  Certification[] @relation("Certification Issuers")
+  certifications_received Certification[] @relation("Certification Targets")
+  warnings_emitted        Warning[]       @relation("Warning Issuers")
+  warnings_received       Warning[]       @relation("Warning Targets")
+  signature               String
+}
+
+model Certification {
+  id         Int       @default(autoincrement())
+  created_at DateTime  @default(now())
+  issuer_id  String
+  target_id  String
+  issuer     Applicant @relation("Certification Issuers", fields: [issuer_id], references: [poh_account])
+  target     Applicant @relation("Certification Targets", fields: [target_id], references: [poh_account])
+  signature  String
+
+  @@unique([issuer_id, target_id])
+}
+
+model Warning {
+  id           Int       @default(autoincrement())
+  created_at   DateTime  @default(now())
+  dismissed_at DateTime?
+  issuer_id    String
+  target_id    String
+  issuer       Applicant @relation("Warning Issuers", fields: [issuer_id], references: [poh_account])
+  target       Applicant @relation("Warning Targets", fields: [target_id], references: [poh_account])
+  signature    String
+
+  @@unique([issuer_id, target_id])
+}

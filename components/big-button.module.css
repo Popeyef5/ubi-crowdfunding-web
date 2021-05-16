@@ -1,0 +1,26 @@
+.bigbutton {
+  max-width: 80vw;
+  font-weight: 800;
+  font-size: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  color: whitesmoke;
+  border: transparent;
+  cursor: pointer;
+  padding: 1em min(2.5em, 5vw);
+  border-radius: 3rem;
+  margin-top: 5rem;
+  margin-bottom: 8rem;
+
+  background: #00b3e5;
+}
+
+.bigbutton:hover {
+  background: #009ce9;
+}
+
+@media screen and (max-width: 768px) {
+  .bigbutton {
+    font-size: 1rem;
+  }
+}
