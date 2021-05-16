@@ -184,11 +184,6 @@ export default function Web3Provider({
     );
   }
 
-  useEffect(
-    () => console.log("MetaMaskState Changed. New State:", metaMaskState),
-    [metaMaskState]
-  );
-
   useEffect(() => {
     web3window = window;
     if (!onboarding.current) {

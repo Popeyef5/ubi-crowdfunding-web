@@ -14,8 +14,6 @@ export default function Profile() {
     useContext<UBICrowdfundState>(CrowdfundContext);
 
   useEffect(() => {
-    console.log('In profile seeing if I should redirect');
-    
     if (!crowdfundState || !crowdfundState.applicant) Router.push("/");
   }, [crowdfundState]);
 

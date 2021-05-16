@@ -27,11 +27,6 @@ export default function CrowdfundProvider({
 
   const { applicant } = useApplicant(poHState.submission);
 
-  //console.log('Applicant in CFContextProvider:', applicant);
-  //console.log('Submision in CFContextProvider:', poHState.submission);
-  
-  
-
   return (
     <CrowdfundContext.Provider value={applicant}>
       {children}

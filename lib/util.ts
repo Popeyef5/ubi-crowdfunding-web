@@ -30,7 +30,6 @@ export function formatDate(object: Object) {
 export function formatUndefined(object: Object) {
   Object.keys(object).forEach((key) => {
     if (typeof object[key] === 'undefined') {
-      console.log('Key', key, 'Object', object)
       object[key] = null;
     }
   });

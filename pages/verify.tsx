@@ -20,9 +20,6 @@ export default function Verify() {
     if (!crowdfundState || !crowdfundState.applicant) Router.push("/");
   }, [crowdfundState]);
 
-  console.log('Crowdfundstate:', crowdfundState?.applicant);
-  
-
   const { target, mutate } = useTarget(crowdfundState?.applicant?.poh_account);
 
   return (
