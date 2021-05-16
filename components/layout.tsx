@@ -2,7 +2,7 @@ import styles from "./layout.module.css";
 import Link from "next/link";
 import { MetaMaskState, Web3Context } from "./providers/web3";
 import { ReactChild, useContext, useMemo } from "react";
-import { gql, useQuery } from "@apollo/client";
+import Head from "next/head"
 
 function networkTagFromState(state: MetaMaskState): string | ReactChild {
   switch (state.chainId) {
@@ -40,6 +40,9 @@ export default function Layout({
 
   return (
     <div className={styles.container}>
+       <Head>
+         <title>UBI for everyone</title>
+       </Head>
       <header className={styles.header}>
         <div className={styles.headerRow}>
           <div className={styles.links}>

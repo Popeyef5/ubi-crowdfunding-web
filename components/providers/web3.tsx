@@ -159,7 +159,7 @@ export default function Web3Provider({
   function updateMetaMaskState() {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
       setMetaMaskState(
-        Object.assign(metaMaskState, {
+        Object.assign(metaMaskStateRef.current, {
           status: "not-installed",
           account: null,
           accounts: [],

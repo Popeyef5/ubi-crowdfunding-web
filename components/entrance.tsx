@@ -12,7 +12,7 @@ import {
 } from "./providers/web3";
 import { CrowdfundContext, UBICrowdfundState } from "./providers/crowdfund";
 import { createApplicant } from "@ubicrowd/http";
-import Router from "next/router"
+import Router from "next/router";
 
 function callToAction(
   metaMaskState: MetaMaskState,
@@ -20,7 +20,7 @@ function callToAction(
   crowdfundState: UBICrowdfundState,
   web3methods: Web3Methods
 ): () => void {
-  if (metaMaskState.chainId !== "0x1") return () => {}
+  if (metaMaskState.chainId !== "0x1") return () => {};
   switch (metaMaskState.status) {
     case "loading":
       return () => {};
@@ -39,11 +39,15 @@ function callToAction(
         default:
           switch (crowdfundState?.applicant) {
             case undefined:
-              return () => {}
-            case null:              
-              return () => {createApplicant(metaMaskState.accounts[0])};
+              return () => {};
+            case null:
+              return () => {
+                createApplicant(metaMaskState.accounts[0]);
+              };
             default:
-              return () => {Router.push('/profile')};
+              return () => {
+                Router.push("/profile");
+              };
           }
       }
     default:
@@ -56,7 +60,6 @@ function callToActionMessage(
   poHState: PoHState,
   crowdfundState: UBICrowdfundState
 ): string | ReactChild {
-  if (metaMaskState.chainId !== "0x1") return "Please Connect to Mainnet"
   switch (metaMaskState.status) {
     case "loading":
       return <PulseLoader color={"#ffffff"} size={20} />;
@@ -65,6 +68,7 @@ function callToActionMessage(
     case "disconnected":
       return "Connect your wallet";
     case "connected":
+      if (metaMaskState.chainId !== "0x1") return "Please Connect to Mainnet";
       switch (poHState?.submission) {
         case "0":
           return <PulseLoader color={"#ffffff"} size={20} />;
@@ -73,7 +77,7 @@ function callToActionMessage(
         default:
           switch (crowdfundState?.applicant) {
             case undefined:
-              return <PulseLoader color={"#ffffff"} size={20} />
+              return <PulseLoader color={"#ffffff"} size={20} />;
             case null:
               return "Apply for funding";
             default:
