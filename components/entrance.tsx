@@ -20,7 +20,6 @@ function callToAction(
   crowdfundState: UBICrowdfundState,
   web3methods: Web3Methods
 ): () => void {
-  if (metaMaskState.chainId !== "0x1") return () => {};
   switch (metaMaskState.status) {
     case "loading":
       return () => {};
@@ -29,6 +28,7 @@ function callToAction(
     case "disconnected":
       return web3methods.connect;
     case "connected":
+      if (metaMaskState.chainId !== "0x1") return () => {};
       switch (poHState?.submission) {
         case "0":
           return () => {};
