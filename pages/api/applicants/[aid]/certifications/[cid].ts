@@ -14,9 +14,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
+  if (!applicant) return res.status(400).end("Bad Request.")
+
   switch (method) {
     case "GET":
-      handleGET(cid as string, applicant, res);
+      handleGET(aid as string, cid as string, res);
       break;
     case "PUT":
         handlePUT(applicant, res)
@@ -27,13 +29,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 async function handleGET(
-  id: string,
-  applicant: Applicant,
+  issuer_id: string,
+  target_id: string,
   res: NextApiResponse
 ) {
   const certification = await prisma.certification.findUnique({
     where: {
-      id: Number(id),
+      issuer_id_target_id: {
+        issuer_id,
+        target_id
+      }
     },
   });
   res.status(200).json(certification);

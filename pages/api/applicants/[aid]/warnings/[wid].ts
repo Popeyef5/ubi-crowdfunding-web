@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (method) {
     case "GET":
-      handleGET(wid as string, applicant, res);
+      handleGET(aid as string, wid as string, res);
       break;
     case "PUT":
         handlePUT(applicant, res)
@@ -27,13 +27,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 async function handleGET(
-  id: string,
-  applicant: Applicant,
+  issuer_id : string,
+  target_id: string,
   res: NextApiResponse
 ) {
   const warning = await prisma.warning.findUnique({
     where: {
-      id: Number(id),
+      issuer_id_target_id: {
+        issuer_id,
+        target_id
+      }
     },
   });
   res.status(200).json(warning);
