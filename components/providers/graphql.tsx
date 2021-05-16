@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import {
   ApolloClient,
   ApolloProvider,
@@ -39,22 +39,18 @@ function PoHProvider({ children }: { children: React.ReactNode }) {
 
   const [poHState, setPoHState] = useState(initialstate);
 
-  function fetchPoHState() {
-    console.log('Fetching PoH State with account:', metaMaskState.accounts[0]);
-    
+  function fetchPoHState() {    
       getPoHData({
-        variables: { id: metaMaskState.accounts[0]?.toLowerCase() },
+        variables: { id: metaMaskState.account?.toLowerCase() },
       });
   }
 
-  function updatePoHState() {
-    console.log('PoH data:', poHData);
-    
+  function updatePoHState() {    
     poHData?.submission
       ? setPoHState({ submission: poHData.submission.id })
       : setPoHState({ submission: null });
   }
-  useMemo(fetchPoHState, [metaMaskState]);
+  useMemo(fetchPoHState, [metaMaskState.account]);
 
   useMemo(updatePoHState, [poHData]);
 

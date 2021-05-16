@@ -47,7 +47,7 @@ export default function Lists({
 
   return applicants ? (
     <Layout>
-      <Wrapper padding="18px" align="start">
+      <Wrapper padding="36px" justify="start">
         <ActionRow>
           <React.Fragment>
             <Button

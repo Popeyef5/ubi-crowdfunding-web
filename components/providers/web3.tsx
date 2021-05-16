@@ -9,21 +9,6 @@ interface Web3Window extends Window {
 
 let web3window: Web3Window;
 
-const domain = [
-  { name: "name", type: "string" },
-  { name: "chainId", type: "unit256" },
-];
-
-const operation = [
-  { name: "account", type: "address" },
-  { name: "", type: "string" },
-];
-
-const domainData = {
-  name: "UBI Crowdfunder v1",
-  chainId: 2,
-};
-
 function toMessageParams(data: Object) {
   const msgParams = [];
   for (const entry of Object.entries(data)) {
@@ -69,16 +54,16 @@ export async function verifySignature(
 
 export interface MetaMaskState {
   status: string;
+  account: string | null;
   accounts: string[];
   chainId: string | null;
-  networkId: string | null;
 }
 
 export const Web3Context = createContext<MetaMaskState>({
   status: "loading",
+  account: null,
   accounts: [],
   chainId: null,
-  networkId: null,
 });
 
 export interface Web3Methods {
@@ -88,84 +73,75 @@ export interface Web3Methods {
 
 export const Web3MethodsContext = createContext<Web3Methods>({
   install: () => {},
-  connect: () => {}
-})
+  connect: () => {},
+});
 
 const ETHEREUM_MAINNET = {
   chainId: "0x1",
-  networkId: "1"
-}
+  networkId: "1",
+};
 
 export default function Web3Provider({
   children,
 }: {
   children: React.ReactNode;
-}) {  
+}) {
   const onboarding = useRef<MetaMaskOnboarding>();
 
   const inistialState: MetaMaskState = {
     status: "loading",
+    account: null,
     accounts: [],
     chainId: null,
-    networkId: null,
-
   };
 
-  const [metaMaskState, setMetaMaskState] = useState(inistialState);
+  const [metaMaskState, _setMetaMaskState] = useState(inistialState);
+  const metaMaskStateRef = useRef(metaMaskState)
+
+  function setMetaMaskState(state: MetaMaskState) {
+    metaMaskStateRef.current = state
+    _setMetaMaskState(state)
+  }
 
   function newAccountsState(accounts: string[], state?: MetaMaskState) {
     const newState: MetaMaskState = Object.assign(
       {},
-      state ? state : metaMaskState
+      state ? state : metaMaskStateRef.current
     );
     accounts && accounts.length > 0
       ? Object.assign(newState, {
           status: "connected",
+          account: accounts[0],
           accounts,
         })
       : Object.assign(newState, {
           status: "disconnected",
+          account: null,
           accounts,
         });
-        console.log('New State:', newState);
-        
     return newState;
   }
 
   function newChainState(chainId: string, state?: MetaMaskState) {
     const newState: MetaMaskState = Object.assign(
       {},
-      state ? state : metaMaskState
+      state ? state : metaMaskStateRef.current
     );
-    Object.assign(newState, { chainId });
-    //if (chainId !== ETHEREUM_MAINNET.chainId) Object.assign(newState, { accounts: [] })
+    chainId !== ETHEREUM_MAINNET.chainId
+      ? Object.assign(newState, { chainId, account: null })
+      : newState.accounts.length > 0
+      ? Object.assign(newState, { chainId, account: newState.accounts[0] })
+      : Object.assign(newState, { chainId });
     return newState;
   }
 
-  function newNetworkState(networkId: string, state?: MetaMaskState) {
-    const newState: MetaMaskState = Object.assign(
-      {},
-      state ? state : metaMaskState
-    );
-    Object.assign(newState, { networkId });
-    return newState;
-  }
-
-  function onNewAccounts(accounts: string[]) {
+  function onNewAccounts(accounts: string[]) {    
     const state = newAccountsState(accounts);
     setMetaMaskState(state);
   }
 
   function onNewChain(chainId: string) {
-    const state = newChainState(chainId);
-    setMetaMaskState(state);
-    console.log(state);
-    
-  }
-
-  function onNewNetwork(networkId: string) {
-    const state = newNetworkState(networkId);
-    setMetaMaskState(state);
+    window.location.href = '/'
   }
 
   function installMetaMask() {
@@ -185,6 +161,7 @@ export default function Web3Provider({
       setMetaMaskState(
         Object.assign(metaMaskState, {
           status: "not-installed",
+          account: null,
           accounts: [],
         })
       );
@@ -197,21 +174,22 @@ export default function Web3Provider({
     const chainPromise = web3window.ethereum.request({
       method: "eth_chainId",
     });
-    const networkPromise = web3window.ethereum.request({
-      method: "net_version",
-    });
 
-    Promise.all([accountsPromise, chainPromise, networkPromise]).then(
-      ([accounts, chainId, networkId]: [string[], string, string]) => {
+    Promise.all([accountsPromise, chainPromise]).then(
+      ([accounts, chainId]: [string[], string]) => {
         let state: MetaMaskState = newAccountsState(accounts);
         state = newChainState(chainId, state);
-        state = newNetworkState(networkId, state);
         setMetaMaskState(state);
       }
     );
   }
 
-  useEffect(() => {    
+  useEffect(
+    () => console.log("MetaMaskState Changed. New State:", metaMaskState),
+    [metaMaskState]
+  );
+
+  useEffect(() => {
     web3window = window;
     if (!onboarding.current) {
       onboarding.current = new MetaMaskOnboarding();
@@ -225,16 +203,17 @@ export default function Web3Provider({
   }, []);
 
   useEffect(() => {
-    if (!MetaMaskOnboarding.isMetaMaskInstalled()) return  
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) return;
     web3window.ethereum.autoRefreshOnNetworkChange = false;
     web3window.ethereum.on("chainChanged", onNewChain);
-    web3window.ethereum.on("networkChanged", onNewNetwork);
     web3window.ethereum.on("accountsChanged", onNewAccounts);
-  });
+  }, []);
 
   return (
     <Web3Context.Provider value={metaMaskState}>
-      <Web3MethodsContext.Provider value={{install: installMetaMask, connect: connectToMetaMask}}>
+      <Web3MethodsContext.Provider
+        value={{ install: installMetaMask, connect: connectToMetaMask }}
+      >
         {children}
       </Web3MethodsContext.Provider>
     </Web3Context.Provider>

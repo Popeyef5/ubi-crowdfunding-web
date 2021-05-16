@@ -71,7 +71,7 @@ function callToActionMessage(
         case null:
           return "Register to PoH";
         default:
-          console.log('Crowdfund State:', crowdfundState);
+          //console.log('Crowdfund State:', crowdfundState);
           
           switch (crowdfundState?.applicant) {
             case undefined:
