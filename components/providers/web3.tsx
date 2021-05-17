@@ -1,6 +1,6 @@
 import MetaMaskOnboarding from "@metamask/onboarding";
 import { recoverTypedSignatureLegacy } from "eth-sig-util";
-import React from "react";
+import React, { VideoHTMLAttributes } from "react";
 import { useEffect, useState, createContext, useRef } from "react";
 
 interface Web3Window extends Window {
@@ -69,11 +69,13 @@ export const Web3Context = createContext<MetaMaskState>({
 export interface Web3Methods {
   install: () => void;
   connect: () => void;
+  setState: (metaMaskState: MetaMaskState) => void;
 }
 
 export const Web3MethodsContext = createContext<Web3Methods>({
   install: () => {},
   connect: () => {},
+  setState: (metaMaskState: MetaMaskState) => {},
 });
 
 const ETHEREUM_MAINNET = {
@@ -158,7 +160,10 @@ export default function Web3Provider({
 
   async function updateMetaMaskState() {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
-      const newState: MetaMaskState = Object.assign({}, metaMaskStateRef.current)
+      const newState: MetaMaskState = Object.assign(
+        {},
+        metaMaskStateRef.current
+      );
       setMetaMaskState(
         Object.assign(newState, {
           status: "not-installed",
@@ -208,7 +213,11 @@ export default function Web3Provider({
   return (
     <Web3Context.Provider value={metaMaskState}>
       <Web3MethodsContext.Provider
-        value={{ install: installMetaMask, connect: connectToMetaMask }}
+        value={{
+          install: installMetaMask,
+          connect: connectToMetaMask,
+          setState: setMetaMaskState,
+        }}
       >
         {children}
       </Web3MethodsContext.Provider>

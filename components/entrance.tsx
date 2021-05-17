@@ -42,7 +42,13 @@ function callToAction(
               return () => {};
             case null:
               return () => {
-                createApplicant(metaMaskState.accounts[0]);
+                const currentState = Object.assign({}, metaMaskState);
+                web3methods.setState(
+                  Object.assign(currentState, { status: "loading" })
+                );
+                createApplicant(metaMaskState.account).then((value) =>
+                  web3methods.setState(metaMaskState)
+                );
               };
             default:
               return () => {
@@ -59,7 +65,7 @@ function callToActionMessage(
   metaMaskState: MetaMaskState,
   poHState: PoHState,
   crowdfundState: UBICrowdfundState
-): string | ReactChild {  
+): string | ReactChild {
   switch (metaMaskState.status) {
     case "loading":
       return <PulseLoader color={"#ffffff"} size={20} />;
@@ -89,7 +95,7 @@ function callToActionMessage(
   }
 }
 export default function Entrance() {
-  const metaMaskState: MetaMaskState = useContext<MetaMaskState>(Web3Context);  
+  const metaMaskState: MetaMaskState = useContext<MetaMaskState>(Web3Context);
   const poHState: PoHState = useContext<PoHState>(PoHContext);
   const crowdfundState: UBICrowdfundState =
     useContext<UBICrowdfundState>(CrowdfundContext);
