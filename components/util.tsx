@@ -16,8 +16,10 @@ align-items: ${({align}) => align && align || 'center'};
 `
 export const Spacer = styled.div<{
     height?: string,
-    width?: string
+    width?: string,
+    flex?: string
 }>`
 height: ${({height}) => height && height};
 width: ${({width}) => width && width};
+flex: ${({flex}) => flex && flex};
 `

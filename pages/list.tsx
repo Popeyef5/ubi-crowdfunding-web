@@ -7,12 +7,21 @@ import {
 } from "@ubicrowd/prisma";
 import { Applicant, Certification, Warning } from "@prisma/client";
 import { ApplicantsTable, WarningsTable } from "components/tables";
-import { Wrapper } from "components/util";
+import { Spacer, Wrapper } from "components/util";
 import ActionRow from "components/action-row";
-import React, { useState } from "react";
-import Button from "components/button";
+import React, { useMemo, useState } from "react";
+import Button, { ButtonArray } from "components/button";
 import Layout from "components/layout";
 import CertificationsTable from "components/tables/certifications-table";
+import {
+  createMuiTheme,
+  createStyles,
+  makeStyles,
+  TextField,
+  Theme,
+  withStyles,
+} from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const applicants = await getFormattedApplicants();
@@ -27,6 +36,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
+
+const FilterTextField = withStyles({
+  root: {
+    "& label.Mui-focused": {
+      color: "var(--secondary)",
+    },
+    "& .MuiInput-underline:after": {
+      borderBottomColor: "var(-secondary)",
+    },
+    "& .MuiOutlinedInput-root": {
+      "&.Mui-focused fieldset": {
+        borderColor: "var(--secondary)",
+      },
+    },
+  },
+})(TextField);
 
 const LIST_OPTIONS = {
   applicants: "applicants",
@@ -45,11 +70,52 @@ export default function Lists({
 }) {
   const [current, setCurrent] = useState(LIST_OPTIONS.applicants);
 
+  const [filter, setFilter] = useState("");
+
+  function match(obj: any, filter: string) {
+    if (obj == null) return false;
+
+    return Object.values(obj).some((val) => {
+      switch (typeof val) {
+        case "number":
+          return String(val).includes(filter);
+        case "string":
+          return val.toLowerCase().includes(filter.toLowerCase());
+        case "object":
+          return match(val, filter);
+        default:
+          return false;
+      }
+    });
+  }
+
+  function filterData(objects: any[]) {
+    const filtered = objects.filter((obj) => match(obj, filter));
+    return filtered;
+  }
+
+  const filteredApplicants = useMemo(
+    () => filterData(applicants),
+    [filter, applicants]
+  );
+  const filteredCertifications = useMemo(
+    () => filterData(certifications),
+    [filter, certifications]
+  );
+  const filteredWarnings = useMemo(
+    () => filterData(warnings),
+    [filter, warnings]
+  );
+
+  function onSearchChanged(event: React.ChangeEvent<HTMLInputElement>) {
+    setFilter(event.target.value);
+  }
+
   return applicants ? (
     <Layout>
       <Wrapper padding="36px" justify="start">
-        <ActionRow>
-          <React.Fragment>
+        <ActionRow justifyContent="space-between">
+          <ButtonArray gap="16px">
             <Button
               onClick={() => {
                 setCurrent(LIST_OPTIONS.applicants);
@@ -78,15 +144,21 @@ export default function Lists({
             >
               Warnings
             </Button>{" "}
-          </React.Fragment>
+          </ButtonArray>
+          <FilterTextField
+          size="small"
+            variant="outlined"
+            label="Search"
+            onChange={onSearchChanged}
+          />
         </ActionRow>
         <Card>
           {current === LIST_OPTIONS.applicants ? (
-            <ApplicantsTable applicants={applicants} />
+            <ApplicantsTable applicants={filteredApplicants} />
           ) : current === LIST_OPTIONS.certifications ? (
-            <CertificationsTable certifications={certifications} />
+            <CertificationsTable certifications={filteredCertifications} />
           ) : current === LIST_OPTIONS.warnings ? (
-            <WarningsTable warnings={warnings} />
+            <WarningsTable warnings={filteredWarnings} />
           ) : (
             <></>
           )}

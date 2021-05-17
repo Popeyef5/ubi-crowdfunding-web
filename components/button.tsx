@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { PropsWithChildren } from "react";
 import styles from "./button.module.css";
+import styled from "styled-components";
 
 type ButtonProps = {
   children?: React.ReactNode;
@@ -45,3 +45,8 @@ export function ActionButton({ children, accent, onClick }: ButtonProps) {
     </div>
   );
 }
+
+export const ButtonArray = styled.div`
+  gap: ${({ gap }) => gap && gap};
+  display: flex;
+`;
