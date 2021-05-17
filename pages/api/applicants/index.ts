@@ -29,7 +29,7 @@ async function handlePOST(data: any, signature: string, res: NextApiResponse) {
   const { poh_account } = data;
   if (!poh_account) return res.status(400).end("Bad Request.");
   const verified = await verifySignature(data, poh_account, signature);
-  //if (!verified) return res.status(400).end("Unauthorized.");
+  if (!verified) return res.status(400).end("Unauthorized.");
 
   const applicant = await prisma.applicant.upsert({
     where: {

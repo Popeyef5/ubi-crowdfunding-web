@@ -6,11 +6,11 @@ import {
   Cell,
   Column,
   PageButtons,
-  ResponsiveGrid,
 } from "./tools";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { MdContentCopy } from "react-icons/md";
 import { maxItemsFromHeight } from "@ubicrowd/util";
+import styled from "styled-components"
 
 const SORT_FIELD = {
   poh_account: "poh_account",
@@ -19,6 +19,22 @@ const SORT_FIELD = {
 };
 
 const MAX_ITEMS = 10;
+
+const ResponsiveGrid = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 2fr 1fr 3fr;
+  }
+
+  @media screen and (max-width: 500px) {
+    grid-template-columns: 1fr auto auto;
+    & > *:nth-child(3) {
+      display: none;
+    }
+    & > *:nth-child(2) {
+       display: none;
+    } }
+  `;
 
 const ApplicantRow = ({ applicant }: { applicant: Applicant }) => {
   return (

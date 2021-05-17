@@ -5,10 +5,16 @@
     text-align: center;
 }
 
+@media screen and (max-width: 500px) {
+  .base {
+    font-size: 13px;
+  }
+}
+
 .action {
   min-width: 15vw;
   padding: 0.5em;  
-  font-size: 1.5vw;
+  font-size: max(1.5vw, 16px);
   font-weight: 500;
 }
 

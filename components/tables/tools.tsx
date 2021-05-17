@@ -3,27 +3,6 @@ import styled from "styled-components";
 import ActionRow from "../action-row";
 import Button from "../button";
 
-export const ResponsiveGrid = styled.div<{
-  sizes?: number[];
-}>`
-  display: grid;
-  grid-gap: 1em;
-  align-items: center;
-  grid-template-columns: ${({ sizes }) =>
-    sizes.map((size) => `${size}fr`).join(" ")};
-  }
-
-  @media screen and (max-width: 500px) {
-    & > *:nth-child(3) {
-      color: red;
-      display: none;
-    }
-    & > *:nth-child(2) {
-      color: red;
-      display: none;
-    } }
-  `;
-
 export const Break = styled.div`
   height: 1px;
   background-color: lightgrey;
@@ -31,11 +10,16 @@ export const Break = styled.div`
 `;
 
 export const Cell = styled.div`
+  padding: 0 8px;
   color: darkslategrey;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @media screen and (max-width: 500px) {
+    font-size: 11px;
+  }
 `;
 
 export const PageButtons = styled.div`

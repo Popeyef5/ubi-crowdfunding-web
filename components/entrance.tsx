@@ -59,7 +59,7 @@ function callToActionMessage(
   metaMaskState: MetaMaskState,
   poHState: PoHState,
   crowdfundState: UBICrowdfundState
-): string | ReactChild {
+): string | ReactChild {  
   switch (metaMaskState.status) {
     case "loading":
       return <PulseLoader color={"#ffffff"} size={20} />;
@@ -89,7 +89,7 @@ function callToActionMessage(
   }
 }
 export default function Entrance() {
-  const metaMaskState: MetaMaskState = useContext<MetaMaskState>(Web3Context);
+  const metaMaskState: MetaMaskState = useContext<MetaMaskState>(Web3Context);  
   const poHState: PoHState = useContext<PoHState>(PoHContext);
   const crowdfundState: UBICrowdfundState =
     useContext<UBICrowdfundState>(CrowdfundContext);

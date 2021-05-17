@@ -13,6 +13,14 @@ export const MediumText = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @media screen and (max-width: 500px) {
+    font-size: 25px;
+    word-break: break-word;
+    white-space: normal;  
+    text-align: center;
+    max-width: 90%;
+  }
 `;
 
 export const SmallText = styled.div`
@@ -23,4 +31,9 @@ export const SmallText = styled.div`
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @media screen and (max-width: 500px) {
+    font-size: 18px;
+    text-align: center;
+  }
 `;

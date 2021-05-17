@@ -4,7 +4,7 @@ import {
   CrowdfundContext,
   UBICrowdfundState,
 } from "components/providers/crowdfund";
-import { Wrapper } from "components/util";
+import { Spacer, Wrapper } from "components/util";
 import { useContext, useEffect } from "react";
 import Router from "next/router";
 import { MediumText, SmallText } from "components/text";
@@ -22,6 +22,7 @@ export default function Profile() {
       {crowdfundState && crowdfundState.applicant ? (
         <Wrapper>
           <MediumText>{crowdfundState.applicant?.poh_account}</MediumText>
+          <Spacer height="36px"/>
           <SmallText>
             {crowdfundState.applicant?.certifications_emitted.length}{" "}
             certifications emmitted
@@ -43,7 +44,7 @@ export default function Profile() {
               Router.push("/verify");
             }}
           >
-            Verify New Profile
+            Verify New Profiles
           </BigButton>
         </Wrapper>
       ) : (

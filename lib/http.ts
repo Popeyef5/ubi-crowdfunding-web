@@ -63,12 +63,12 @@ export async function createApplicant(poh_account: string) {
   return await postJSON("/api/applicants", body);
 }
 
-export async function createCertification(issuer_id: string, target_id: string) {
+export async function postCertification(issuer_id: string, target_id: string) {
   const body = await signData({ target_id }, issuer_id)
   return await postJSON(`/api/applicants/${issuer_id}/certifications`, body)
 }
 
-export async function createWarning(issuer_id: string, target_id: string) {
+export async function postWarning(issuer_id: string, target_id: string) {
   const body = await signData({ target_id }, issuer_id)
   return await postJSON(`/api/applicants/${issuer_id}/warnings`, body)
 }

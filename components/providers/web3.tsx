@@ -96,11 +96,11 @@ export default function Web3Provider({
   };
 
   const [metaMaskState, _setMetaMaskState] = useState(inistialState);
-  const metaMaskStateRef = useRef(metaMaskState)
+  const metaMaskStateRef = useRef(metaMaskState);
 
   function setMetaMaskState(state: MetaMaskState) {
-    metaMaskStateRef.current = state
-    _setMetaMaskState(state)
+    metaMaskStateRef.current = state;
+    _setMetaMaskState(state);
   }
 
   function newAccountsState(accounts: string[], state?: MetaMaskState) {
@@ -135,13 +135,13 @@ export default function Web3Provider({
     return newState;
   }
 
-  function onNewAccounts(accounts: string[]) {    
+  function onNewAccounts(accounts: string[]) {
     const state = newAccountsState(accounts);
     setMetaMaskState(state);
   }
 
   function onNewChain(chainId: string) {
-    window.location.href = '/'
+    window.location.href = "/";
   }
 
   function installMetaMask() {
@@ -156,10 +156,11 @@ export default function Web3Provider({
       .then(onNewAccounts);
   }
 
-  function updateMetaMaskState() {
+  async function updateMetaMaskState() {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+      const newState: MetaMaskState = Object.assign({}, metaMaskStateRef.current)
       setMetaMaskState(
-        Object.assign(metaMaskStateRef.current, {
+        Object.assign(newState, {
           status: "not-installed",
           account: null,
           accounts: [],
@@ -193,7 +194,7 @@ export default function Web3Provider({
 
   useEffect(() => {
     (async () => {
-      updateMetaMaskState();
+      await updateMetaMaskState();
     })();
   }, []);
 
