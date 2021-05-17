@@ -46,7 +46,7 @@ function callToAction(
                 web3methods.setState(
                   Object.assign(currentState, { status: "loading" })
                 );
-                createApplicant(metaMaskState.account).then((value) =>
+                createApplicant(metaMaskState.account).finally(() =>
                   web3methods.setState(metaMaskState)
                 );
               };
