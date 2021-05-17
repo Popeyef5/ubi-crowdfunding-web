@@ -19,7 +19,7 @@ model Applicant {
 }
 
 model Certification {
-  id         Int       @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   created_at DateTime  @default(now())
   issuer_id  String
   target_id  String
@@ -31,7 +31,7 @@ model Certification {
 }
 
 model Warning {
-  id           Int       @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   created_at   DateTime  @default(now())
   dismissed_at DateTime?
   issuer_id    String

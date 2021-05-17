@@ -53,4 +53,22 @@ export async function getFullApplicant(poh_account: string) {
   return applicant;
 }
 
+export async function getCertification(id: number) {
+  const certification = await prisma.certification.findUnique({
+    where: {
+      id
+    }
+  })
+  return certification
+}
+
+export async function getWarning(id: number) {
+  const warning = await prisma.warning.findUnique({
+    where: {
+      id
+    }
+  })
+  return warning
+}
+
 
