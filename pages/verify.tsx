@@ -38,8 +38,8 @@ export default function Verify() {
       .then((value) => setResult(true))
       .catch((reason) => setResult(false))
       .finally(() => {
-        setLoading(false)
-        setTimeout(fetchNewTarget, 1000)
+        setLoading(false);
+        setTimeout(fetchNewTarget, 1000);
       });
   }
 
@@ -51,25 +51,27 @@ export default function Verify() {
     handleRequest(postWarning(issuer_id, target_id));
   }
 
+  function visitProfile() {
+    window.open(
+      `https://app.proofofhumanity.id/profile/${target.poh_account}`,
+      "_blank"
+    );
+  }
+
   return (
     <Layout>
-      <Wrapper padding="0 36px">
+      <Wrapper padding="0">
         {loading || !target ? (
           <PuffLoader size="35vh" color="var(--secondary)" />
         ) : result ? (
-          <FiCheckCircle size="30vh" color="var(--accept)"/>
+          <FiCheckCircle size="30vh" color="var(--accept)" />
         ) : target.poh_account ? (
           <>
             <MediumText>{target.poh_account}</MediumText>
             <SmallText
               cursor="pointer"
               color="var(--secondary)"
-              onClick={() =>
-                window.open(
-                  `https://app.proofofhumanity.id/profile/${target.poh_account}`,
-                  "_blank"
-                )
-              }
+              onClick={visitProfile}
             >
               Inspect on PoH
             </SmallText>

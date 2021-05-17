@@ -17,7 +17,7 @@ export function useApplicants() {
 
 export function useApplicant(id: string | null) {
   const { data, error } = useSWR(id ? `/api/applicants/${id}` : null, fetcher);
-  
+
   return {
     applicant: data,
     isLoading: !error && !data,
@@ -28,14 +28,21 @@ export function useApplicant(id: string | null) {
 export function useTarget(id: string | null) {
   const { data, error, mutate } = useSWR(
     id ? `api/applicants/${id}/verify` : null,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshWhenOffline: false,
+      refreshWhenHidden: false,
+      refreshInterval: 0,
+    }
   );
 
   return {
     target: data,
     isLoading: !error && !data,
     isError: error,
-    mutate
+    mutate,
   };
 }
 
@@ -64,11 +71,11 @@ export async function createApplicant(poh_account: string) {
 }
 
 export async function postCertification(issuer_id: string, target_id: string) {
-  const body = await signData({ target_id }, issuer_id)
-  return await postJSON(`/api/applicants/${issuer_id}/certifications`, body)
+  const body = await signData({ target_id }, issuer_id);
+  return await postJSON(`/api/applicants/${issuer_id}/certifications`, body);
 }
 
 export async function postWarning(issuer_id: string, target_id: string) {
-  const body = await signData({ target_id }, issuer_id)
-  return await postJSON(`/api/applicants/${issuer_id}/warnings`, body)
+  const body = await signData({ target_id }, issuer_id);
+  return await postJSON(`/api/applicants/${issuer_id}/warnings`, body);
 }
